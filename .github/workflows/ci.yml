@@ -15,22 +15,11 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        with:
+          reporter: mochawesome
 
-      - name: List generated JSON files
-        run: ls -lh cypress/reports/.jsons
-
-      - name: List files in reports folder
-        run: |
-          ls -R cypress/reports
-
-      - name: Merge Mochawesome Reports
-        run: |
-          npx mochawesome-merge cypress/reports/.jsons/*.json > cypress/reports/combined.json
-          npx mochawesome-report-generator cypress/reports/combined.json
-
-      - name: Verify combined.json content
-        run: |
-          cat cypress/reports/combined.json
+      - name: List generated files
+        run: ls -R cypress/reports
 
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
