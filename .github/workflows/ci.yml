@@ -37,12 +37,21 @@ jobs:
       - name: List JSON files
         run: ls -lh cypress/reports
 
+      - name: Check if JSON files exist
+        run: |
+          if [ -z "$(ls -A cypress/reports/*.json 2>/dev/null)" ]; then
+            echo "No JSON files found, skipping report generation."
+            exit 1
+          fi
+
       - name: Generate Mochawesome report
+        if: success()
         run: |
           npx mochawesome-merge cypress/reports/*.json > cypress/reports/combined.json
           npx mochawesome-report-generator cypress/reports/combined.json --reportDir cypress/reports --inline
 
       - name: Upload Mochawesome Report
+        if: success()
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
