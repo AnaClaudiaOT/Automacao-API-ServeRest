@@ -17,6 +17,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Delete existing index file
+        run: |
+          if [ -f "public/index.html" ]; then
+            rm -f public/index.html
+          fi
+
       - name: Install dependencies
         run: npm install
 
