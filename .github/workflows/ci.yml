@@ -1,34 +1,38 @@
-name: End-to-end tests
-on: push
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  cypress-run:
-    runs-on: ubuntu-22.04
+  test:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Remove old index.html and combined.json
-        run: |
-          rm -f cypress/reports/index.html
-          rm -f cypress/reports/combined.json
-          rm -f cypress/reports/.jsons/* # Remove todos os arquivos .jsons antigos, se necessário
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-
-      - name: Upload Mochawesome Report
-        uses: actions/upload-artifact@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          name: mochawesome-report
-          path: cypress/reports/*.html  # Certifique-se de que o arquivo gerado pelo mochawesome está aqui
+          node-version: '16'
 
-      - name: Generate Detailed Test Report
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress tests
+        run: npm run cypress:run
+
+      - name: Generate Allure report
+        run: allure generate cypress/reports/allure --clean
+
+      - name: Upload Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./cypress/reports/allure-report
+
+      - name: Display Allure Report Link in Actions
         run: |
-          # Gerar o relatório detalhado diretamente do arquivo index.html
-          echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "O relatório completo pode ser visualizado clicando no link abaixo." >> $GITHUB_STEP_SUMMARY
-          
-          # Adicionar a mensagem com o link correto para o relatório HTML
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Veja o relatório de execução [aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $GITHUB_STEP_SUMMARY
+          echo "Allure report is available at: https://<username>.github.io/<repository>/allure-report/index.html"
