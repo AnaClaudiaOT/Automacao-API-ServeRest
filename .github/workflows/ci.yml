@@ -14,19 +14,12 @@ jobs:
         run: |
           ls -R cypress/reports
 
-      # Passo para fazer o merge dos arquivos JSON e gerar o combined.json
-      - name: Merge Mochawesome Reports
-        run: |
-          npx mochawesome-merge cypress/reports/.jsons/mochawesome_*.json > cypress/reports/combined.json
-          # Gera o relatório HTML com base no combined.json
-          npx mochawesome-report-generator cypress/reports/combined.json --reportDir=cypress/reports
-
       # Upload do relatório HTML gerado
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
-          path: cypress/reports/*.html  # Usando curinga para capturar qualquer HTML gerado
+          path: cypress/reports/*.html # Usando curinga para capturar qualquer HTML gerado
 
       # Gerar relatório detalhado com o link para o arquivo HTML
       - name: Generate Detailed Test Report
