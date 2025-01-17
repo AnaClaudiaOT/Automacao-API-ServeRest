@@ -7,8 +7,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Passo para limpar arquivos antigos
+      - name: Clean up old reports
+        run: |
+          rm -f cypress/reports/combined.json
+          rm -f cypress/reports/index.html
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
+
+      - name: List generated JSON files
+        run: ls -lh cypress/reports/.jsons
 
       - name: List files in reports folder
         run: |
@@ -16,14 +25,18 @@ jobs:
 
       - name: Merge Mochawesome Reports
         run: |
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/combined.json
+          npx mochawesome-merge cypress/reports/.jsons/*.json > cypress/reports/combined.json
           npx mochawesome-report-generator cypress/reports/combined.json
+
+      - name: Verify combined.json content
+        run: |
+          cat cypress/reports/combined.json
 
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
-          path: cypress/reports/*.html # Usando um curinga para capturar qualquer HTML gerado
+          path: cypress/reports/*.html
 
       - name: Generate Detailed Test Report
         run: |
