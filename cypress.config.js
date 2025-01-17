@@ -6,12 +6,12 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       require("cypress-mochawesome-reporter/plugin")(on)
     },
-    reporter: 'cypress-mochawesome-reporter',
+    reporter: "cypress-mochawesome-reporter",
     reporterOptions: {
-      reportDir: 'cypress/reports',
+      reportDir: "cypress/reports",
       overwrite: false,
       html: false,
       json: true,
-    }
+    },
   },
 })

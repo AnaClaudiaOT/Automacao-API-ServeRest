@@ -28,8 +28,14 @@ jobs:
       - name: Install Cypress
         run: npx cypress install
 
+      - name: Clean reports directory
+        run: rm -rf cypress/reports/*
+
       - name: Run Cypress tests
         run: npx cypress run --reporter cypress-mochawesome-reporter
+
+      - name: List JSON files
+        run: ls -lh cypress/reports
 
       - name: Generate Mochawesome report
         run: |
@@ -41,6 +47,3 @@ jobs:
         with:
           name: mochawesome-report
           path: cypress/reports/mochawesome.html
-
-      - name: Clean previous reports
-        run: rm -rf cypress/reports/*
