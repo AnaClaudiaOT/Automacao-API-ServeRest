@@ -34,7 +34,13 @@ jobs:
       - name: Prepare Report for Deployment
         run: |
           mkdir -p cypress/reports
-          cp cypress/reports/*.html cypress/reports/index.html
+          report_file=$(ls cypress/reports/*.html | head -n 1)
+          if [ -n "$report_file" ]; then
+            cp "$report_file" cypress/reports/index.html
+          else
+            echo "No report file found to copy."
+            exit 1
+          fi
 
       - name: Upload Artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v1
