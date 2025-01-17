@@ -40,7 +40,14 @@ jobs:
           fi
 
       - name: Generate Mochawesome report
-        run: npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json && npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+          if [ -s cypress/reports/mochawesome.json ]; then
+            npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
+          else
+            echo "Merged JSON report is empty or invalid"
+            exit 1
+          fi
 
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
