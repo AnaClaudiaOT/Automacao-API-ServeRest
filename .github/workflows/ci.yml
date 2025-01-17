@@ -6,5 +6,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
+
+      - name: Generate Test Summary
+        if: env.skip_report == 'false'
+        run: |
+          PASSED=$(jq '[.results[].suites[].tests[] | select(.state == "passed")] | length' cypress/reports/combined.json)
+          FAILED=$(jq '[.results[].suites[].tests[] | select(.state == "failed")] | length' cypress/reports/combined.json)
+          PENDING=$(jq '[.results[].suites[].tests[] | select(.state == "pending")] | length' cypress/reports/combined.json)
+          SKIPPED=$(jq '[.results[].suites[].tests[] | select(.state == "skipped")] | length' cypress/reports/combined.json)
+          DURATION=$(jq '[.results[].suites[].tests[].duration] | add / 1000' cypress/reports/combined.json)
+
+          echo "## Cypress Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Result | Passed ✅ | Failed ❌ | Pending ✋ | Skipped ↩️ | Duration 🕗 |" >> $GITHUB_STEP_SUMMARY
+          echo "| ------ | --------- | --------- | --------- | ---------- | ----------- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Count  | $PASSED   | $FAILED   | $PENDING  | $SKIPPED   | ${DURATION}s |" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Detailed Test Results" >> $GITHUB_STEP_SUMMARY
+          echo ""
