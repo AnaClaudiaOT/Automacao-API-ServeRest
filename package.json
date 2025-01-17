@@ -1,0 +1,20 @@
+{
+  "name": "desafiobancocarrefour",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.4.0",
+    "cypress": "^13.17.0",
+    "cypress-plugin-api": "^2.11.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  }
+}
