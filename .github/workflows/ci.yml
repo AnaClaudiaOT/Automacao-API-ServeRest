@@ -32,7 +32,9 @@ jobs:
         run: npx cypress run --reporter cypress-mochawesome-reporter
 
       - name: Generate Mochawesome report
-        run: npx mochawesome-merge cypress/reports/*.json | npx mochawesome-report-generator --inline
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/combined.json
+          npx mochawesome-report-generator cypress/reports/combined.json --reportDir cypress/reports --inline
 
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
