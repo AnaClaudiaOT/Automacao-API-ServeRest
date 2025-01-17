@@ -1,7 +1,7 @@
 const payload = require("../fixtures/getUser.json")
 const factory = require("../support/factories/post")
 
-describe("Validações Busca de Ssuários", () => {
+describe("Validações Busca de Usuários", () => {
   let token
 
   beforeEach(() => {

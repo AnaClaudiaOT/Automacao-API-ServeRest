@@ -43,7 +43,7 @@ describe("Validações Cadastro de Usuário", () => {
   })
 
   postUsuario.forEach((atributo) => {
-    it("POST - Cadastro Realizado com Sucesso", () => {
+    it("POST - Cadastro Novo Usuário", () => {
       const pay = { ...payload, ...atributo }
 
       // Cadastro do usuário

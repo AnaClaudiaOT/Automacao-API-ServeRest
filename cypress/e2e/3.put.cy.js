@@ -42,7 +42,7 @@ describe("Validações de Atualização de Usuário", () => {
       })
   })
 
-  it("PUT - Cadastro Realizado com Sucesso", () => {
+  it("PUT - Cadastro Novo Usuário", () => {
     const putUsuario = putFactory.putUsuario()[0]
     const pay = { ...payload, ...putUsuario }
 

@@ -171,7 +171,7 @@ describe("Validações Busca de Usuários", () => {
     })
   })
 
-  it("GET - Usuário não encontrado", () => {
+  it("GET - Busca por usuário inexistente", () => {
     cy.getUsuarioNaoEncontrado(token).as("getUsuarios")
 
     // Validações das propriedades
