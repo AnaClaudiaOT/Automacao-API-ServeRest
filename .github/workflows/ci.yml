@@ -11,7 +11,7 @@ jobs:
         uses: cypress-io/github-action@v6
 
       - name: Generate Test Summary
-        if: env.skip_report == 'false'
+        if: env.skip_report == 'true'
         run: |
           PASSED=$(jq '[.results[].suites[].tests[] | select(.state == "passed")] | length' cypress/reports/combined.json)
           FAILED=$(jq '[.results[].suites[].tests[] | select(.state == "failed")] | length' cypress/reports/combined.json)
