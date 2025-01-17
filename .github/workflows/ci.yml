@@ -40,11 +40,10 @@ jobs:
       - name: Check if JSON files exist
         id: check-json
         run: |
-          if [ -z "$(ls -A cypress/reports/*.json 2>/dev/null)" ]; then
-            echo "No JSON files found, skipping report generation."
-            echo "skip_report=true" >> $GITHUB_ENV
-          else
+          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
             echo "skip_report=false" >> $GITHUB_ENV
+          else
+            echo "skip_report=true" >> $GITHUB_ENV
           fi
 
       - name: Generate Mochawesome report
@@ -60,13 +59,19 @@ jobs:
           name: mochawesome-report
           path: cypress/reports/mochawesome.html
 
+      - name: Debug report directory
+        run: ls -lh cypress/reports
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Generate Test Summary
         if: env.skip_report == 'false'
         run: |
-          PASSED=$(jq '[.results[] | select(.suites[].tests[].state == "passed")] | length' cypress/reports/combined.json)
-          FAILED=$(jq '[.results[] | select(.suites[].tests[].state == "failed")] | length' cypress/reports/combined.json)
-          PENDING=$(jq '[.results[] | select(.suites[].tests[].state == "pending")] | length' cypress/reports/combined.json)
-          SKIPPED=$(jq '[.results[] | select(.suites[].tests[].state == "skipped")] | length' cypress/reports/combined.json)
+          PASSED=$(jq '[.results[].suites[].tests[] | select(.state == "passed")] | length' cypress/reports/combined.json)
+          FAILED=$(jq '[.results[].suites[].tests[] | select(.state == "failed")] | length' cypress/reports/combined.json)
+          PENDING=$(jq '[.results[].suites[].tests[] | select(.state == "pending")] | length' cypress/reports/combined.json)
+          SKIPPED=$(jq '[.results[].suites[].tests[] | select(.state == "skipped")] | length' cypress/reports/combined.json)
           DURATION=$(jq '[.results[].suites[].tests[].duration] | add / 1000' cypress/reports/combined.json)
 
           echo "## Cypress Test Summary" >> $GITHUB_STEP_SUMMARY
@@ -77,6 +82,4 @@ jobs:
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Detailed Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          jq -r '.results[].suites[].tests[] | "#### \(.title)\n* **State**: \(.state)\n* **Duration**: \(.duration)ms\n* **Error**: \(.err.message // "None")\n"' cypress/reports/combined.json >> $GITHUB_STEP_SUMMARY
+          echo ""
