@@ -10,11 +10,20 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
 
+      - name: List files in reports folder
+        run: |
+          ls -R cypress/reports
+
+      - name: Merge Mochawesome Reports
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/combined.json
+          npx mochawesome-report-generator cypress/reports/combined.json
+
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
-          path: cypress/reports/mochawesome.html  # Caminho para o relatório HTML gerado
+          path: cypress/reports/*.html # Usando um curinga para capturar qualquer HTML gerado
 
       - name: Generate Detailed Test Report
         run: |
@@ -24,7 +33,7 @@ jobs:
           echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "$TEST_RESULTS" >> $GITHUB_STEP_SUMMARY
-          
+
           # Adicionar a mensagem com o link para o relatório
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Veja o relatório de execução [aqui](https://github.com/${{ github.repository }}/actions/artifacts)" >> $GITHUB_STEP_SUMMARY
