@@ -1,34 +1,57 @@
 name: End-to-end tests
-on: push
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Remove old index.html and combined.json
-        run: |
-          rm -f cypress/reports/index.html
-          rm -f cypress/reports/combined.json
-          rm -f cypress/reports/.jsons/* # Remove todos os arquivos .jsons antigos, se necessário
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-
-      - name: Upload Mochawesome Report
-        uses: actions/upload-artifact@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: mochawesome-report
-          path: cypress/reports/*.html # Certifique-se de que o arquivo gerado pelo mochawesome está aqui
+          node-version: 18
 
-      - name: Generate Detailed Test Report
+      - name: Delete existing index file
         run: |
-          # Personalizar o título no arquivo de resumo do GitHub Actions
-          echo "## Resultados de Testes Automatizados - Meu Projeto Cypress" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "O relatório completo pode ser visualizado clicando no link abaixo." >> $GITHUB_STEP_SUMMARY
+          if [ -f "cypress/reports/index.html" ]; then
+            rm -f cypress/reports/index.html
+          fi
 
-          # Adicionar a mensagem com o link correto para o relatório HTML
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Veja o relatório de execução [aqui](https://anaclaudiaot.github.io/desafioBancoCarrefour/)" >> $GITHUB_STEP_SUMMARY
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+
+      - name: Prepare Report for Deployment
+        run: |
+          mkdir -p cypress/reports
+          report_file=$(ls cypress/reports/*.html | head -n 1)
+          if [ "$report_file" != "cypress/reports/index.html" ]; then
+            cp "$report_file" cypress/reports/index.html
+          else
+            echo "Report file is already named index.html."
+          fi
+
+      - name: Upload Artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: cypress/reports
+
+  deploy:
+    needs: cypress-run
+    runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
