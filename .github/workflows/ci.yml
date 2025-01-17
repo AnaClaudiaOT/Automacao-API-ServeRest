@@ -20,7 +20,13 @@ jobs:
           node-version: 16
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Fix Cypress permissions
+        run: chmod +x ./node_modules/.bin/cypress
+
+      - name: Install Cypress
+        run: npx cypress install
 
       - name: Run Cypress tests
         run: npx cypress run --reporter cypress-mochawesome-reporter
