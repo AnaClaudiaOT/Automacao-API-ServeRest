@@ -24,8 +24,8 @@ jobs:
 
       - name: Generate Detailed Test Report
         run: |
-          # Gerar o relatório detalhado diretamente do arquivo index.html
-          echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
+          # Personalizar o título no arquivo de resumo do GitHub Actions
+          echo "## Resultados de Testes Automatizados - Meu Projeto Cypress" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "O relatório completo pode ser visualizado clicando no link abaixo." >> $GITHUB_STEP_SUMMARY
 

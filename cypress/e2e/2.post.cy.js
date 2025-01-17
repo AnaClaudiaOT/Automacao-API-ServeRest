@@ -1,7 +1,7 @@
 const payload = require("../fixtures/getUser.json")
 const factory = require("../support/factories/post")
 
-describe.skip("Validações Cadastro de Usuário", () => {
+describe("Validações Cadastro de Usuário", () => {
   let token
   const postUsuario = factory.postUsuario()
 

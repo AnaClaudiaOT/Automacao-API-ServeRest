@@ -1,7 +1,7 @@
 const payload = require("../fixtures/getUser.json")
 const factory = require("../support/factories/post")
 
-describe.skip("Validações Busca de Usuários", () => {
+describe("Validações Busca de Usuários", () => {
   let token
 
   beforeEach(() => {
