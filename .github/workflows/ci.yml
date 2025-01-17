@@ -7,35 +7,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Passo para limpar arquivos antigos
-      - name: Clean up old reports
-        run: |
-          rm -f cypress/reports/combined.json
-          rm -f cypress/reports/index.html
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          reporter: mochawesome
 
-      - name: List generated files
-        run: ls -R cypress/reports
+      # Verificar a criação dos arquivos JSON e HTML
+      - name: List generated JSON files
+        run: ls -lh cypress/reports/.jsons
 
+      - name: List files in reports folder
+        run: |
+          ls -R cypress/reports
+
+      # Passo para fazer o merge dos arquivos JSON e gerar o combined.json
+      - name: Merge Mochawesome Reports
+        run: |
+          npx mochawesome-merge cypress/reports/.jsons/mochawesome_*.json > cypress/reports/combined.json
+          # Gera o relatório HTML com base no combined.json
+          npx mochawesome-report-generator cypress/reports/combined.json --reportDir=cypress/reports
+
+      # Upload do relatório HTML gerado
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
-          path: cypress/reports/*.html
+          path: cypress/reports/*.html  # Usando curinga para capturar qualquer HTML gerado
 
+      # Gerar relatório detalhado com o link para o arquivo HTML
       - name: Generate Detailed Test Report
         run: |
-          # Gerar o relatório detalhado para cada teste
-          TEST_RESULTS=$(jq -r '.results[].suites[].tests[] | "\(.title) - \(.state)"' cypress/reports/combined.json)
-
-          echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
+          # Referenciar o arquivo HTML gerado
+          echo "## Relatório Detalhado dos Testes Cypress" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$TEST_RESULTS" >> $GITHUB_STEP_SUMMARY
-
-          # Adicionar a mensagem com o link para o relatório
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Veja o relatório de execução [aqui](https://github.com/${{ github.repository }}/actions/artifacts)" >> $GITHUB_STEP_SUMMARY
+          echo "Veja o relatório de execução [aqui](cypress/reports/index.html)" >> $GITHUB_STEP_SUMMARY
