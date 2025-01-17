@@ -19,8 +19,8 @@ jobs:
 
       - name: Delete existing index file
         run: |
-          if [ -f "public/index.html" ]; then
-            rm -f public/index.html
+          if [ -f "cypress/reports/index.html" ]; then
+            rm -f cypress/reports/index.html
           fi
 
       - name: Install dependencies
@@ -33,13 +33,13 @@ jobs:
 
       - name: Prepare Report for Deployment
         run: |
-          mkdir -p public
-          cp cypress/reports/*.html public/index.html
+          mkdir -p cypress/reports
+          cp cypress/reports/*.html cypress/reports/index.html
 
       - name: Upload Artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
-          path: public
+          path: cypress/reports
 
   deploy:
     needs: cypress-run
