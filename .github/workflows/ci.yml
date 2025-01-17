@@ -27,6 +27,9 @@ jobs:
     - name: Install jq
       run: sudo apt-get install -y jq
 
+    - name: Ensure Cypress permissions
+      run: sudo chmod +x ./node_modules/.bin/cypress
+
     - name: Run Cypress tests
       run: npm run test:cypress
 
