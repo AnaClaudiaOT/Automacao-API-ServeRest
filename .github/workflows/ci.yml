@@ -55,3 +55,12 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
+
+      - name: Display Link to GitHub Pages
+        run: |
+          echo "Deployed website can be accessed at: https://anaclaudiaot.github.io/desafioBancoCarrefour/"
+          
+      - name: Show URL in Summary
+        run: |
+          echo "### Access the deployed website here"
+          echo "[Click Here to View the Website](https://anaclaudiaot.github.io/desafioBancoCarrefour/)"

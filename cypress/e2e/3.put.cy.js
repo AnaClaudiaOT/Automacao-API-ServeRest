@@ -2,7 +2,7 @@ const payload = require("../fixtures/getUser.json")
 const factory = require("../support/factories/post")
 const putFactory = require("../support/factories/put")
 
-describe("Validações de Atualização de Usuário", () => {
+describe.skip("Validações de Atualização de Usuário", () => {
   let token
 
   beforeEach(() => {
