@@ -41,6 +41,17 @@ jobs:
             echo "Report file is already named index.html."
           fi
 
+      - name: Generate Detailed Test Report
+        run: |
+          # Personalizar o título no arquivo de resumo do GitHub Actions
+          echo "## Resultados de Testes Automatizados" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "O relatório completo pode ser visualizado clicando no link abaixo." >> $GITHUB_STEP_SUMMARY
+
+          # Adicionar a mensagem com o link correto para o relatório HTML
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Veja o relatório de execução [aqui](https://anaclaudiaot.github.io/desafioBancoCarrefour/)" >> $GITHUB_STEP_SUMMARY
+
       - name: Upload Artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
