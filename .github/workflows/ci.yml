@@ -10,10 +10,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
 
-      # Verificar a criação dos arquivos JSON e HTML
-      - name: List generated JSON files
-        run: ls -lh cypress/reports/.jsons
-
       - name: List files in reports folder
         run: |
           ls -R cypress/reports
