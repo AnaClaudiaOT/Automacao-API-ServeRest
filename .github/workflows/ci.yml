@@ -34,6 +34,9 @@ jobs:
       - name: Run Cypress tests
         run: npx cypress run --reporter cypress-mochawesome-reporter --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
 
+      - name: Ensure reports directory exists
+        run: mkdir -p cypress/reports
+
       - name: List JSON files
         run: ls -lh cypress/reports
 
