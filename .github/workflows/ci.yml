@@ -10,21 +10,21 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
 
-      - name: Generate Test Summary
-        if: env.skip_report == 'true'
+      - name: Upload Mochawesome Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-report
+          path: cypress/reports/mochawesome.html  # Caminho para o relatório HTML gerado
+
+      - name: Generate Detailed Test Report
         run: |
-          PASSED=$(jq '[.results[].suites[].tests[] | select(.state == "passed")] | length' cypress/reports/combined.json)
-          FAILED=$(jq '[.results[].suites[].tests[] | select(.state == "failed")] | length' cypress/reports/combined.json)
-          PENDING=$(jq '[.results[].suites[].tests[] | select(.state == "pending")] | length' cypress/reports/combined.json)
-          SKIPPED=$(jq '[.results[].suites[].tests[] | select(.state == "skipped")] | length' cypress/reports/combined.json)
-          DURATION=$(jq '[.results[].suites[].tests[].duration] | add / 1000' cypress/reports/combined.json)
+          # Gerar o relatório detalhado para cada teste
+          TEST_RESULTS=$(jq -r '.results[].suites[].tests[] | "\(.title) - \(.state)"' cypress/reports/combined.json)
 
-          echo "## Cypress Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Result | Passed ✅ | Failed ❌ | Pending ✋ | Skipped ↩️ | Duration 🕗 |" >> $GITHUB_STEP_SUMMARY
-          echo "| ------ | --------- | --------- | --------- | ---------- | ----------- |" >> $GITHUB_STEP_SUMMARY
-          echo "| Count  | $PASSED   | $FAILED   | $PENDING  | $SKIPPED   | ${DURATION}s |" >> $GITHUB_STEP_SUMMARY
-
+          echo "$TEST_RESULTS" >> $GITHUB_STEP_SUMMARY
+          
+          # Adicionar a mensagem com o link para o relatório
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Detailed Test Results" >> $GITHUB_STEP_SUMMARY
-          echo ""
+          echo "Veja o relatório de execução [aqui](https://github.com/${{ github.repository }}/actions/artifacts)" >> $GITHUB_STEP_SUMMARY
