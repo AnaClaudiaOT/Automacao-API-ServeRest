@@ -43,7 +43,7 @@ jobs:
         run: npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json && npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
 
       - name: Upload Mochawesome Report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
           path: cypress/reports/mochawesome.html
