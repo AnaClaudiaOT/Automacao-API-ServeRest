@@ -41,3 +41,6 @@ jobs:
         with:
           name: mochawesome-report
           path: cypress/reports/mochawesome.html
+
+      - name: Clean previous reports
+        run: rm -rf cypress/reports/*
