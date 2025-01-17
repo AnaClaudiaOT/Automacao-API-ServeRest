@@ -7,24 +7,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Remove old index.html and combined.json
+        run: |
+          rm -f cypress/reports/index.html
+          rm -f cypress/reports/combined.json
+          rm -f cypress/reports/.jsons/* # Remove todos os arquivos .jsons antigos, se necessário
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
 
-      - name: List files in reports folder
-        run: |
-          ls -R cypress/reports
-
-      # Upload do relatório HTML gerado
       - name: Upload Mochawesome Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mochawesome-report
-          path: cypress/reports/*.html # Usando curinga para capturar qualquer HTML gerado
+          path: cypress/reports/*.html
 
-      # Gerar relatório detalhado com o link para o arquivo HTML
       - name: Generate Detailed Test Report
         run: |
-          # Referenciar o arquivo HTML gerado
-          echo "## Relatório Detalhado dos Testes Cypress" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Veja o relatório de execução [aqui](cypress/reports/index.html)" >> $GITHUB_STEP_SUMMARY
+        # Gerar o relatório detalhado para cada teste
+        TEST_RESULTS=$(jq -r '.results[].suites[].tests[] | "\(.title) - \(.state)"' cypress/reports/combined.json)
+
+        echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "$TEST_RESULTS" >> $GITHUB_STEP_SUMMARY
+
+        # Adicionar a mensagem com o link correto para o relatório
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Veja o relatório de execução [aqui](https://github.com/${{ github.repository }}/actions/artifacts?artifact_name=mochawesome-report)" >> $GITHUB_STEP_SUMMARY
+
