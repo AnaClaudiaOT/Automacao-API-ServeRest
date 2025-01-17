@@ -1,10 +1,35 @@
-name: End-to-end tests
-on: push
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
 jobs:
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress tests
+        run: npx cypress run --reporter cypress-mochawesome-reporter
+
+      - name: Generate Mochawesome report
+        run: npx mochawesome-merge cypress/reports/*.json | npx mochawesome-report-generator --inline
+
+      - name: Upload Mochawesome Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-report
+          path: cypress/reports/mochawesome.html
