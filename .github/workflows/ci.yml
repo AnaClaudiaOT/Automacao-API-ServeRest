@@ -1,66 +1,34 @@
 name: End-to-end tests
-
-on:
-  push:
-    branches:
-      - main
-
+on: push
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Delete existing index file
+      - name: Remove old index.html and combined.json
         run: |
-          if [ -f "cypress/reports/index.html" ]; then
-            rm -f cypress/reports/index.html
-          fi
+          rm -f cypress/reports/index.html
+          rm -f cypress/reports/combined.json
+          rm -f cypress/reports/.jsons/* # Remove todos os arquivos .jsons antigos, se necessário
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Cypress tests
+      - name: Cypress run
         uses: cypress-io/github-action@v6
+
+      - name: Upload Mochawesome Report
+        uses: actions/upload-artifact@v4
         with:
-          browser: chrome
+          name: mochawesome-report
+          path: cypress/reports/*.html # Certifique-se de que o arquivo gerado pelo mochawesome está aqui
 
-      - name: Prepare Report for Deployment
+      - name: Generate Detailed Test Report
         run: |
-          mkdir -p cypress/reports
-          report_file=$(ls cypress/reports/*.html | head -n 1)
-          if [ "$report_file" != "cypress/reports/index.html" ]; then
-            cp "$report_file" cypress/reports/index.html
-          else
-            echo "Report file is already named index.html."
-          fi
+          # Gerar o relatório detalhado diretamente do arquivo index.html
+          echo "## Cypress Detailed Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "O relatório completo pode ser visualizado clicando no link abaixo." >> $GITHUB_STEP_SUMMARY
 
-      - name: Upload Artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: cypress/reports
-
-  deploy:
-    needs: cypress-run
-    runs-on: ubuntu-22.04
-    permissions:
-      pages: write
-      id-token: write
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
-
-      - name: Display Link to GitHub Pages
-        run: |
-          echo "Deployed website can be accessed at: https://anaclaudiaot.github.io/desafioBancoCarrefour/"
-          
-      - name: Show URL in Summary
-        run: |
-          echo "### Access the deployed website here"
-          echo "[Click Here to View the Website](https://anaclaudiaot.github.io/desafioBancoCarrefour/)"
+          # Adicionar a mensagem com o link correto para o relatório HTML
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Veja o relatório de execução [aqui](https://anaclaudiaot.github.io/desafioBancoCarrefour/)" >> $GITHUB_STEP_SUMMARY
