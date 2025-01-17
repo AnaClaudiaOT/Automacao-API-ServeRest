@@ -1,0 +1,5 @@
+  - name: Prepare Report for Deployment
+        run: |
+          mkdir -p public
+          cp cypress/reports/*.html public/index.html
+          touch public/.nojekyll
