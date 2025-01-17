@@ -13,48 +13,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14"
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16' # Atualize para uma versão compatível
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Install jq
-        run: sudo apt-get install -y jq
+    - name: Install jq
+      run: sudo apt-get install -y jq
 
-      - name: Run Cypress tests
-        run: npm run test:cypress
+    - name: Run Cypress tests
+      run: npm run test:cypress
 
-      - name: Check if JSON files exist
-        run: |
-          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
-            echo "JSON files exist"
-          else
-            echo "No JSON files found"
-            exit 1
-          fi
+    - name: Check if JSON files exist
+      run: |
+        if ls cypress/reports/*.json 1> /dev/null 2>&1; then
+          echo "JSON files exist"
+        else
+          echo "No JSON files found"
+          exit 1
+        fi
 
-      - name: Generate Mochawesome report
-        run: |
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
-          if [ -s cypress/reports/mochawesome.json ]; then
-            npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
-          else
-            echo "Merged JSON report is empty or invalid"
-            exit 1
-          fi
+    - name: Generate Mochawesome report
+      run: |
+        npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+        if [ -s cypress/reports/mochawesome.json ]; then
+          npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
+        else
+          echo "Merged JSON report is empty or invalid"
+          exit 1
+        fi
 
-      - name: Upload Mochawesome Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: mochawesome-report
-          path: cypress/reports/mochawesome.html
+    - name: Upload Mochawesome Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: mochawesome-report
+        path: cypress/reports/mochawesome.html
 
-      - name: Generate Test Summary
-        run: |
-          # Your commands to generate test summary
+    - name: Generate Test Summary
+      run: |
+        # Your commands to generate test summary
