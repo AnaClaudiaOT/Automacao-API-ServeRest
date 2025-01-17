@@ -1,18 +1,17 @@
 const { defineConfig } = require("cypress")
 
 module.exports = defineConfig({
-  reporter: "allure-mocha-reporter", // Usando o Allure como reporter
+  reporter: "cypress-mochawesome-reporter", // Usando o reporter mochawesome
   reporterOptions: {
-    reportDir: "cypress/reports/allure", // Diretório onde os relatórios do Allure serão salvos
-    overwrite: true, // Sobrescrever relatórios antigos
-    html: false, // Não gerar HTML direto aqui, pois o Allure usa uma versão customizada
+    reportDir: "cypress/reports", // Diretório onde os arquivos .json são salvos
+    overwrite: false, // Não sobrescrever arquivos existentes
+    html: true, // Gerar arquivo HTML
     json: true, // Gerar arquivo JSON
   },
   e2e: {
     baseUrl: "https://serverest.dev",
     setupNodeEvents(on, config) {
-      // Inicializa o plugin do Allure
-      require("@shelex/cypress-allure-plugin/plugin")(on, config)
+      require("cypress-mochawesome-reporter/plugin")(on) // Inicializa o plugin
       return config
     },
   },

@@ -1,38 +1,41 @@
-name: Cypress Tests
-
-on:
-  push:
-    branches:
-      - main
-
+name: End-to-end tests
+on: push
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
+  cypress-run:
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
 
-      - name: Install dependencies
-        run: npm install
+      # Verificar a criação dos arquivos JSON e HTML
+      - name: List generated JSON files
+        run: ls -lh cypress/reports/.jsons
 
-      - name: Run Cypress tests
-        run: npm run cypress:run
-
-      - name: Generate Allure report
-        run: allure generate cypress/reports/allure --clean
-
-      - name: Upload Allure report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./cypress/reports/allure-report
-
-      - name: Display Allure Report Link in Actions
+      - name: List files in reports folder
         run: |
-          echo "Allure report is available at: https://<username>.github.io/<repository>/allure-report/index.html"
+          ls -R cypress/reports
+
+      # Passo para fazer o merge dos arquivos JSON e gerar o combined.json
+      - name: Merge Mochawesome Reports
+        run: |
+          npx mochawesome-merge cypress/reports/.jsons/mochawesome_*.json > cypress/reports/combined.json
+          # Gera o relatório HTML com base no combined.json
+          npx mochawesome-report-generator cypress/reports/combined.json --reportDir=cypress/reports
+
+      # Upload do relatório HTML gerado
+      - name: Upload Mochawesome Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-report
+          path: cypress/reports/*.html  # Usando curinga para capturar qualquer HTML gerado
+
+      # Gerar relatório detalhado com o link para o arquivo HTML
+      - name: Generate Detailed Test Report
+        run: |
+          # Referenciar o arquivo HTML gerado
+          echo "## Relatório Detalhado dos Testes Cypress" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Veja o relatório de execução [aqui](cypress/reports/index.html)" >> $GITHUB_STEP_SUMMARY
