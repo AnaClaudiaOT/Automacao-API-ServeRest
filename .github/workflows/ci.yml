@@ -35,11 +35,10 @@ jobs:
         run: |
           mkdir -p cypress/reports
           report_file=$(ls cypress/reports/*.html | head -n 1)
-          if [ -n "$report_file" ]; then
+          if [ "$report_file" != "cypress/reports/index.html" ]; then
             cp "$report_file" cypress/reports/index.html
           else
-            echo "No report file found to copy."
-            exit 1
+            echo "Report file is already named index.html."
           fi
 
       - name: Upload Artifact for GitHub Pages
