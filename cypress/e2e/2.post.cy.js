@@ -5,39 +5,51 @@ describe("Validações Cadastro de Usuário", () => {
   let token
   const postUsuario = factory.postUsuario()
 
-  before(() => {
-    // Realiza o login e obtém o token JWT
-    cy.request({
-      method: "POST",
-      url: "/login",
-      body: {
-        email: "teste@teste.com",
-        password: "teste123",
-      },
-    }).then((response) => {
-      console.log(response)
-      expect(response.status).to.eq(200)
-      expect(response.body.message).to.eq('Login realizado com sucesso')
+  beforeEach(() => {
+    // Cadastrar um usuário novo
+    const postUsuario = factory.postUsuario()[0]
+    const pay = { ...payload, ...postUsuario }
 
-      token = response.body.authorization
-    })
+    cy.postUsuario(pay, token)
+      .as("postUsuarios")
+      .then((postResponse) => {
+        console.log("POST LOGIN", postResponse)
+        expect(postResponse.status).to.eq(201)
+        expect(postResponse.body.message).to.eq(
+          "Cadastro realizado com sucesso",
+        )
+
+        // Login com o usuário cadastrado
+        cy.request({
+          method: "POST",
+          url: "/login",
+          body: {
+            email: postUsuario.email,
+            password: postUsuario.password,
+          },
+        }).then((loginResponse) => {
+          console.log("POST Login", loginResponse)
+          expect(loginResponse.status).to.eq(200)
+          expect(loginResponse.body.message).to.eq(
+            "Login realizado com sucesso",
+          )
+
+          token = loginResponse.body.authorization
+
+          // Chamar cy.getUsuarios() após obter o token
+          cy.getUsuarios(token)
+        })
+      })
   })
 
   postUsuario.forEach((atributo) => {
     it("POST - Cadastro Realizado com Sucesso", () => {
       const pay = { ...payload, ...atributo }
 
-      cy.request({
-        method: "POST",
-        url: "/usuarios/",
-        failOnStatusCode: false,
-        body: pay,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).as("postUsuarios")
+      // Cadastro do usuário
+      cy.postUsuario(pay, token).as("postUsuarios")
 
-      // Validação Cadastro Realizado com Sucesso
+     // Valida que usuário foi cadastrado
       cy.get("@postUsuarios").then((response) => {
         console.log(response)
         expect(response.status).to.eq(201)
@@ -51,15 +63,8 @@ describe("Validações Cadastro de Usuário", () => {
     const existingEmail = postUsuario[0].email // Reutilizando o e-mail do primeiro usuário criado
     const pay = { ...payload, email: existingEmail }
 
-    cy.request({
-      method: "POST",
-      url: "/usuarios/",
-      failOnStatusCode: false,
-      body: pay,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).as("postUsuarios")
+    // Cadastro do usuário
+    cy.postUsuario(pay, token).as("postUsuarios")
 
     // Validação de e-mail já existente
     cy.get("@postUsuarios").then((response) => {
@@ -73,15 +78,8 @@ describe("Validações Cadastro de Usuário", () => {
     const invalidEmail = "invalid-email"
     const pay = { ...payload, email: invalidEmail }
 
-    cy.request({
-      method: "POST",
-      url: "/usuarios/",
-      failOnStatusCode: false,
-      body: pay,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).as("postUsuarios")
+    // Cadastro do usuário
+    cy.postUsuario(pay, token).as("postUsuarios")
 
     // Validação de e-mail inválido
     cy.get("@postUsuarios").then((response) => {
@@ -95,15 +93,8 @@ describe("Validações Cadastro de Usuário", () => {
     const invalidPassword = ""
     const pay = { ...payload, password: invalidPassword }
 
-    cy.request({
-      method: "POST",
-      url: "/usuarios/",
-      failOnStatusCode: false,
-      body: pay,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).as("postUsuarios")
+    // Cadastro do usuário
+    cy.postUsuario(pay, token).as("postUsuarios")
 
     // Validação de senha inválida
     cy.get("@postUsuarios").then((response) => {

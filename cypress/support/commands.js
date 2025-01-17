@@ -1,25 +1,142 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+// Busca por todos os usuários
+Cypress.Commands.add("getUsuarios", (token) => {
+  cy.request({
+    method: "GET",
+    url: "/usuarios",
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((getResponse) => {
+    return getResponse
+  })
+})
+
+// Busca usuário por ID
+Cypress.Commands.add("getUsuariosID", (userId, token) => {
+  cy.request({
+    method: "GET",
+    url: `/usuarios/${userId}`,
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((getResponse) => {
+    return getResponse
+  })
+})
+
+// Busca usuário pelo nome
+Cypress.Commands.add("getUsuarioNome", (nome, token) => {
+  cy.request({
+    method: "GET",
+    url: `/usuarios?nome=${nome}`,
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((getResponse) => {
+    return getResponse
+  })
+})
+
+// Busca usuário por email
+Cypress.Commands.add("getUsuarioEmail", (email, token) => {
+  cy.request({
+    method: "GET",
+    url: `/usuarios?email=${email}`,
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((getResponse) => {
+    return getResponse
+  })
+})
+
+// Busca usuário por senha
+Cypress.Commands.add("getUsuarioSenha", (password, token) => {
+  cy.request({
+    method: "GET",
+    url: `/usuarios?password=${password}`,
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((getResponse) => {
+    return getResponse
+  })
+})
+
+// Busca usuário nao encontrado
+Cypress.Commands.add("getUsuarioNaoEncontrado", (token) => {
+  cy.request({
+    method: "GET",
+    url: "/usuarios/usuarionaoencontrado",
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((getResponse) => {
+    return getResponse
+  })
+})
+
+// POST - Cadastra um novo usuário
+Cypress.Commands.add("postUsuario", (pay, token) => {
+  cy.request({
+    method: "POST",
+    url: "/usuarios/",
+    failOnStatusCode: false,
+    body: pay,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((postResponse) => {
+    return postResponse
+  })
+})
+
+// PUT - Cadastra um novo usuário
+Cypress.Commands.add("putNovoUsuario", (pay, token) => {
+  cy.request({
+    method: "PUT",
+    url: "/usuarios/:_id",
+    failOnStatusCode: false,
+    body: pay,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((postResponse) => {
+    return postResponse
+  })
+})
+
+// PUT - Atualiza cadastro existente
+Cypress.Commands.add("putUsuario", (userId, token, put) => {
+  cy.request({
+    method: "PUT",
+    url: `/usuarios/${userId}`,
+    failOnStatusCode: false,
+    body: put,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((postResponse) => {
+    return postResponse
+  })
+})
+
+// DELETE - Deleção de usuário
+Cypress.Commands.add("deleteUsuario", (userId, token) => {
+  cy.request({
+    method: "DELETE",
+    url: `/usuarios/${userId}`,
+    failOnStatusCode: false,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((postResponse) => {
+    return postResponse
+  })
+})

@@ -4,22 +4,41 @@ const factory = require("../support/factories/post")
 describe("Validações Busca de Ssuários", () => {
   let token
 
-  before(() => {
-    // Realiza o login e obtém o token JWT
-    cy.request({
-      method: "POST",
-      url: "/login",
-      body: {
-        email: "teste@teste.com",
-        password: "teste123",
-      },
-    }).then((response) => {
-      console.log(response)
-      expect(response.status).to.eq(200)
-      expect(response.body.message).to.eq("Login realizado com sucesso")
+  beforeEach(() => {
+    // Cadastrar um usuário novo
+    const postUsuario = factory.postUsuario()[0]
+    const pay = { ...payload, ...postUsuario }
 
-      token = response.body.authorization
-    })
+    cy.postUsuario(pay, token)
+      .as("postUsuarios")
+      .then((postResponse) => {
+        console.log("POST LOGIN", postResponse)
+        expect(postResponse.status).to.eq(201)
+        expect(postResponse.body.message).to.eq(
+          "Cadastro realizado com sucesso",
+        )
+
+        // Login com o usuário cadastrado
+        cy.request({
+          method: "POST",
+          url: "/login",
+          body: {
+            email: postUsuario.email,
+            password: postUsuario.password,
+          },
+        }).then((loginResponse) => {
+          console.log("POST Login", loginResponse)
+          expect(loginResponse.status).to.eq(200)
+          expect(loginResponse.body.message).to.eq(
+            "Login realizado com sucesso",
+          )
+
+          token = loginResponse.body.authorization
+
+          // Chamar cy.getUsuarios() após obter o token
+          cy.getUsuarios(token)
+        })
+      })
   })
 
   it("DELETE - Cadastro e deleção de Usuário por ID", () => {
@@ -27,17 +46,9 @@ describe("Validações Busca de Ssuários", () => {
     const pay = { ...payload, ...postUsuario }
 
     // Cadastro do usuário
-    cy.request({
-      method: "POST",
-      url: "/usuarios/",
-      failOnStatusCode: false,
-      body: pay,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).as("postUsuarios")
+    cy.postUsuario(pay, token).as("postUsuarios")
 
-    // Validação de cadastro de usuário
+    // Valida que usuário foi cadastrado
     cy.get("@postUsuarios").then((postResponse) => {
       console.log(postResponse)
       expect(postResponse.status).to.eq(201)
@@ -47,11 +58,7 @@ describe("Validações Busca de Ssuários", () => {
       const userId = postResponse.body._id
 
       // Realiza o DELETE do usuário cadastrado
-      cy.request({
-        method: "DELETE",
-        url: `/usuarios/${userId}`,
-        failOnStatusCode: false,
-      }).as("deleteUsuario")
+      cy.deleteUsuario(userId, token).as("deleteUsuario")
 
       // Validações das propriedades
       cy.get("@deleteUsuario").then((getResponse) => {
