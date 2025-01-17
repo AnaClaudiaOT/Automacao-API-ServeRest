@@ -1,71 +1,14 @@
-name: CI Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+name: End-to-end tests
+on: push
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  cypress-run:
+    runs-on: ubuntu-22.04
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16' # Atualize para uma versão compatível
-
-    - name: Cache Cypress binary
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/Cypress
-        key: ${{ runner.os }}-cypress-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-cypress-
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Install Cypress
-      run: npx cypress install
-
-    - name: Install jq
-      run: sudo apt-get install -y jq
-
-    - name: Run Cypress tests
-      run: npm run test:cypress
-
-    - name: Check if JSON files exist
-      run: |
-        if ls cypress/reports/*.json 1> /dev/null 2>&1; then
-          echo "JSON files exist"
-        else
-          echo "No JSON files found"
-          exit 1
-        fi
-
-    - name: Generate Mochawesome report
-      run: |
-        npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
-        if [ -s cypress/reports/mochawesome.json ]; then
-          npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
-        else
-          echo "Merged JSON report is empty or invalid"
-          exit 1
-        fi
-
-    - name: Upload Mochawesome Report
-      uses: actions/upload-artifact@v3
-      with:
-        name: mochawesome-report
-        path: cypress/reports/mochawesome.html
-
-    - name: Generate Test Summary
-      run: |
-        # Your commands to generate test summary
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        with:
+          command: npm run test:cloud
