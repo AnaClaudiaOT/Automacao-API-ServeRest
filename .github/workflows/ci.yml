@@ -1,88 +1,53 @@
-name: Cypress Tests
+name: CI Pipeline
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
-  cypress-run:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: "14"
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Fix Cypress permissions
-        run: chmod +x ./node_modules/.bin/cypress
-
-      - name: Install Cypress
-        run: npx cypress install
-
-      - name: Clean reports directory
-        run: rm -rf cypress/reports/*
-
-      - name: Run Cypress tests
-        run: npx cypress run --reporter cypress-mochawesome-reporter --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true
-
-      - name: Ensure reports directory exists
-        run: mkdir -p cypress/reports
-
-      - name: List JSON files
-        run: ls -lh cypress/reports
-
-      - name: Check if JSON files exist
-        id: check-json
-        run: |
-          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
-            echo "skip_report=false" >> $GITHUB_ENV
-          else
-            echo "skip_report=true" >> $GITHUB_ENV
-          fi
-
-      - name: Generate Mochawesome report
-        if: env.skip_report == 'false'
-        run: |
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/combined.json
-          npx mochawesome-report-generator cypress/reports/combined.json --reportDir cypress/reports --inline
-
-      - name: Upload Mochawesome Report
-        if: env.skip_report == 'false'
-        uses: actions/upload-artifact@v3
-        with:
-          name: mochawesome-report
-          path: cypress/reports/mochawesome.html
-
-      - name: Debug report directory
-        run: ls -lh cypress/reports
+        run: npm install
 
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Generate Test Summary
-        if: env.skip_report == 'false'
+      - name: Run Cypress tests
+        run: npm run test:cypress
+
+      - name: Check if JSON files exist
         run: |
-          PASSED=$(jq '[.results[].suites[].tests[] | select(.state == "passed")] | length' cypress/reports/combined.json)
-          FAILED=$(jq '[.results[].suites[].tests[] | select(.state == "failed")] | length' cypress/reports/combined.json)
-          PENDING=$(jq '[.results[].suites[].tests[] | select(.state == "pending")] | length' cypress/reports/combined.json)
-          SKIPPED=$(jq '[.results[].suites[].tests[] | select(.state == "skipped")] | length' cypress/reports/combined.json)
-          DURATION=$(jq '[.results[].suites[].tests[].duration] | add / 1000' cypress/reports/combined.json)
+          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
+            echo "JSON files exist"
+          else
+            echo "No JSON files found"
+            exit 1
+          fi
 
-          echo "## Cypress Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Result | Passed ✅ | Failed ❌ | Pending ✋ | Skipped ↩️ | Duration 🕗 |" >> $GITHUB_STEP_SUMMARY
-          echo "| ------ | --------- | --------- | --------- | ---------- | ----------- |" >> $GITHUB_STEP_SUMMARY
-          echo "| Count  | $PASSED   | $FAILED   | $PENDING  | $SKIPPED   | ${DURATION}s |" >> $GITHUB_STEP_SUMMARY
+      - name: Generate Mochawesome report
+        run: npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json && npx marge cypress/reports/mochawesome.json --reportDir cypress/reports
 
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Detailed Test Results" >> $GITHUB_STEP_SUMMARY
-          echo ""
+      - name: Upload Mochawesome Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: mochawesome-report
+          path: cypress/reports/mochawesome.html
+
+      - name: Generate Test Summary
+        run: |
+          # Your commands to generate test summary
