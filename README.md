@@ -51,7 +51,7 @@ Este projeto cobre os seguintes casos de uso:
 #### Download do projeto
 1.	Crie uma pasta no local de sua preferência.
 2.	Clique com o botão direito do mouse dentro da pasta e selecione a opção Open Git Bash here		
-3.	Adicione o comando a seguir no Git Bash: git clone https://github.com/AnaClaudiaOT/desafioBancoCarrefour.git
+3.	Adicione o comando a seguir no Git Bash: git clone https://github.com/AnaClaudiaOT/Automacao-API-ServeRest.git
 4.	Abra o VS Code (Visual Studio Code)
 5.	Abra o menu File (Arquivo) no Vs Code e clique em Open Folder (Abrir Pasta)
 6.	Encontre a pasta criada anteriormente e selecione
