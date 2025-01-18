@@ -19,7 +19,7 @@ describe("Validações Busca de Usuários", () => {
         )
 
         // Login com o usuário cadastrado
-        cy.request({
+        cy.api({
           method: "POST",
           url: "/login",
           body: {

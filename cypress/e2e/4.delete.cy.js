@@ -19,7 +19,7 @@ describe("Validações de Deleção de Usuários", () => {
         )
 
         // Login com o usuário cadastrado
-        cy.request({
+        cy.api({
           method: "POST",
           url: "/login",
           body: {
@@ -71,7 +71,7 @@ describe("Validações de Deleção de Usuários", () => {
 
   it("DELETE - Validação de deleção de usuário com carrinho cadastrado", () => {
     // Faz a requisição para obter os carrinhos
-    cy.request({
+    cy.api({
       method: "GET",
       url: "/carrinhos",
       failOnStatusCode: false,
@@ -90,7 +90,7 @@ describe("Validações de Deleção de Usuários", () => {
       const idUsuario = getResponse.body.carrinhos[0].idUsuario
 
       // Tenta deletar o usuário com o idUsuario extraído
-      cy.request({
+      cy.api({
         method: "DELETE",
         url: `/usuarios/${idUsuario}`,
         failOnStatusCode: false,

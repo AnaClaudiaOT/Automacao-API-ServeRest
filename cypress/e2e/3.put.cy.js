@@ -20,7 +20,7 @@ describe("Validações de Atualização de Usuário", () => {
         )
 
         // Login com o usuário cadastrado
-        cy.request({
+        cy.api({
           method: "POST",
           url: "/login",
           body: {
@@ -131,7 +131,7 @@ describe("Validações de Atualização de Usuário", () => {
       console.log("PUT Payload:", putPayload)
 
       // Cadastro via PUT
-      cy.request({
+      cy.api({
         method: "PUT",
         url: "/usuarios/:_id",
         failOnStatusCode: false,

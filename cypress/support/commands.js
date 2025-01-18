@@ -1,6 +1,6 @@
 // Busca por todos os usuários
 Cypress.Commands.add("getUsuarios", (token) => {
-  cy.request({
+  cy.api({
     method: "GET",
     url: "/usuarios",
     failOnStatusCode: false,
@@ -14,7 +14,7 @@ Cypress.Commands.add("getUsuarios", (token) => {
 
 // Busca usuário por ID
 Cypress.Commands.add("getUsuariosID", (userId, token) => {
-  cy.request({
+  cy.api({
     method: "GET",
     url: `/usuarios/${userId}`,
     failOnStatusCode: false,
@@ -28,7 +28,7 @@ Cypress.Commands.add("getUsuariosID", (userId, token) => {
 
 // Busca usuário pelo nome
 Cypress.Commands.add("getUsuarioNome", (nome, token) => {
-  cy.request({
+  cy.api({
     method: "GET",
     url: `/usuarios?nome=${nome}`,
     failOnStatusCode: false,
@@ -42,7 +42,7 @@ Cypress.Commands.add("getUsuarioNome", (nome, token) => {
 
 // Busca usuário por email
 Cypress.Commands.add("getUsuarioEmail", (email, token) => {
-  cy.request({
+  cy.api({
     method: "GET",
     url: `/usuarios?email=${email}`,
     failOnStatusCode: false,
@@ -56,7 +56,7 @@ Cypress.Commands.add("getUsuarioEmail", (email, token) => {
 
 // Busca usuário por senha
 Cypress.Commands.add("getUsuarioSenha", (password, token) => {
-  cy.request({
+  cy.api({
     method: "GET",
     url: `/usuarios?password=${password}`,
     failOnStatusCode: false,
@@ -70,7 +70,7 @@ Cypress.Commands.add("getUsuarioSenha", (password, token) => {
 
 // Busca usuário nao encontrado
 Cypress.Commands.add("getUsuarioNaoEncontrado", (token) => {
-  cy.request({
+  cy.api({
     method: "GET",
     url: "/usuarios/usuarionaoencontrado",
     failOnStatusCode: false,
@@ -84,7 +84,7 @@ Cypress.Commands.add("getUsuarioNaoEncontrado", (token) => {
 
 // POST - Cadastra um novo usuário
 Cypress.Commands.add("postUsuario", (pay, token) => {
-  cy.request({
+  cy.api({
     method: "POST",
     url: "/usuarios/",
     failOnStatusCode: false,
@@ -99,7 +99,7 @@ Cypress.Commands.add("postUsuario", (pay, token) => {
 
 // PUT - Cadastra um novo usuário
 Cypress.Commands.add("putNovoUsuario", (pay, token) => {
-  cy.request({
+  cy.api({
     method: "PUT",
     url: "/usuarios/:_id",
     failOnStatusCode: false,
@@ -114,7 +114,7 @@ Cypress.Commands.add("putNovoUsuario", (pay, token) => {
 
 // PUT - Atualiza cadastro existente
 Cypress.Commands.add("putUsuario", (userId, token, put) => {
-  cy.request({
+  cy.api({
     method: "PUT",
     url: `/usuarios/${userId}`,
     failOnStatusCode: false,
@@ -129,7 +129,7 @@ Cypress.Commands.add("putUsuario", (userId, token, put) => {
 
 // DELETE - Deleção de usuário
 Cypress.Commands.add("deleteUsuario", (userId, token) => {
-  cy.request({
+  cy.api({
     method: "DELETE",
     url: `/usuarios/${userId}`,
     failOnStatusCode: false,
