@@ -1,4 +1,4 @@
-# Desafio de Automação de Testes de API
+# Automação de Testes de API - ServeRest
 
 Este projeto visa garantir a qualidade de uma API de gerenciamento de usuários, automatizando testes para os principais endpoints da API. Foi utilizado o Cypress como framework de testes e o Mocha para geração de relatórios detalhados. Os resultados são integrados ao GitHub Actions para automação contínua (CI/CD).  
 
