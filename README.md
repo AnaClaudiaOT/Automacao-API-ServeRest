@@ -46,7 +46,7 @@ Este projeto cobre os seguintes casos de uso:
 
 ## Execução dos Testes
 
-  [Link do repositório](https://github.com/AnaClaudiaOT/desafioBancoCarrefour.git)
+  [Link do repositório](https://github.com/AnaClaudiaOT/Automacao-API-ServeRest.git)
 
 #### Download do projeto
 1.	Crie uma pasta no local de sua preferência.
