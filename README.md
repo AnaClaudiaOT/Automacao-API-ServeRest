@@ -32,7 +32,8 @@ Este projeto cobre os seguintes casos de uso:
 
 ### Requisitos
 - **Node.js:**
-[Baixar Node.js](https://nodejs.org/download/release/v23.6.0/node-v23.6.0-x64.msi) 
+[Baixar Node.js](https://nodejs.org/download/release/v23.6.0/node-v23.6.0-x64.msi)
+    - **Versão do Node utilizada:** `23.5` 
 
 - **Git:**
 [Baixar Git](https://git-scm.com/downloads)
