@@ -55,7 +55,8 @@ Este projeto cobre os seguintes casos de uso:
 4.	Abra o VS Code (Visual Studio Code)
 5.	Abra o menu File (Arquivo) no Vs Code e clique em Open Folder (Abrir Pasta)
 6.	Encontre a pasta criada anteriormente e selecione e clique em Selecionar Pasta
-7.	Clique com o botão direito em cima do nome do projeto e clique em Open in Integrated Terminal (Abrir terminal Git Bash)
+7.	Utilizar o Git Bash como terminal dentro do VS Code:
+    [Veja o passo a passo aqui](https://micilini.com/blog/como-integrar-o-git-bash-no-terminal-do-visual-studio-code)
 
 ### Instalação de dependências 
 1.	Digite o comando a seguir no terminal aberto: **npm install**
