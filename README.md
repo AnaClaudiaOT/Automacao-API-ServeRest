@@ -7,11 +7,11 @@ Relatórios são disponibilizados visualmente via GitHub Pages, permitindo o aco
 ---
 
 ## Índice
-1. [Contexto](####contexto)
-2. [Configuração do Ambiente](####configuração-do-ambiente)
-3. [Execução dos Testes](####execução-dos-testes)
-4. [Testes Implementados](####testes-implementados)
-5. [Geração de Relatórios](####geração-de-relatórios)
+1. Contexto
+2. Configuração do Ambiente
+3. Execução dos Testes
+4. Testes Implementados
+5. Geração de Relatórios
 
 ---
 
