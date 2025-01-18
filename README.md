@@ -46,12 +46,12 @@ Este projeto cobre os seguintes casos de uso:
 
 ## Execução dos Testes
 
-  [Link do repositório](https://github.com/AnaClaudiaOT/desafioBancoCarrefour.git)
+  [Link do repositório](https://github.com/AnaClaudiaOT/Automacao-API-ServeRest.git)
 
 #### Download do projeto
 1.	Crie uma pasta no local de sua preferência.
 2.	Clique com o botão direito do mouse dentro da pasta e selecione a opção Open Git Bash here		
-3.	Adicione o comando a seguir no Git Bash: git clone https://github.com/AnaClaudiaOT/desafioBancoCarrefour.git
+3.	Adicione o comando a seguir no Git Bash: git clone https://github.com/AnaClaudiaOT/Automacao-API-ServeRest.git
 4.	Abra o VS Code (Visual Studio Code)
 5.	Abra o menu File (Arquivo) no Vs Code e clique em Open Folder (Abrir Pasta)
 6.	Encontre a pasta criada anteriormente e selecione
@@ -105,11 +105,11 @@ Sempre que uma modificação é feita no projeto e o código é enviado para o r
 
 ### Acessando o Histórico de Execuções no GitHub Actions
 Para acessar o histórico completo das execuções realizadas pela pipeline do GitHub Actions, clique no seguinte link:  
-[GitHub Actions - Histórico de Execuções](https://github.com/AnaClaudiaOT/desafioBancoCarrefour/actions)  
+[GitHub Actions - Histórico de Execuções](https://anaclaudiaot.github.io/Automacao-API-ServeRest/actions)  
 Aqui você encontrará todos os registros de execução dos testes.
 
 ### Acessando o Relatório Gerado
 Após a execução da pipeline, o relatório estará disponível via **GitHub Pages**. Para acessá-lo, basta clicar no seguinte link:  
-[Relatório de Execução - GitHub Pages](https://anaclaudiaot.github.io/desafioBancoCarrefour/)  
+[Relatório de Execução - GitHub Pages](https://anaclaudiaot.github.io/Automacao-API-ServeRest/)
 No relatório, você poderá acompanhar todos os detalhes dos testes realizados e analisar os resultados de forma visual e acessível.
 
