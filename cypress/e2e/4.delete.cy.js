@@ -69,7 +69,7 @@ describe("Validações Busca de Usuários", () => {
     })
   })
 
-  it.skip("DELETE - Validação de deleção de usuário com carrinho cadastrado", () => {
+  it("DELETE - Validação de deleção de usuário com carrinho cadastrado", () => {
     // Faz a requisição para obter os carrinhos
     cy.request({
       method: "GET",

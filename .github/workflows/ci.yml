@@ -17,11 +17,9 @@ jobs:
         with:
           node-version: 18
 
-      - name: Delete existing index file
+      - name: Clean up report directory
         run: |
-          if [ -f "cypress/reports/index.html" ]; then
-            rm -f cypress/reports/index.html
-          fi
+          rm -f cypress/reports/index.html
 
       - name: Install dependencies
         run: npm install

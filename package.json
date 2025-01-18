@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:mocha": "mocha --config .mocharc.js",
-    "test:cypress": "cypress run --reporter cypress-mochawesome-reporter --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true",
-    "preinstall": "node -e \"if (!/^18|20|22/.test(process.version)) { console.error('Este projeto exige uma versão do Node.js compatível (18.x.x, 20.x.x, ou >=22.x.x).'); process.exit(1); }\""
+    "test:cypress": "cypress run --reporter cypress-mochawesome-reporter --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true && open cypress/reports/index.html || start cypress/reports/index.html"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +14,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.4.0",
     "cypress": "^14.0.0",
-    "cypress-plugin-api": "^2.11.2",
-    "desafiobancocarrefour": "file:"
+    "cypress-plugin-api": "^2.11.2"
   },
   "devDependencies": {
     "cypress-mochawesome-reporter": "^3.8.2",
