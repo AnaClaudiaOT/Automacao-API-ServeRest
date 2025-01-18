@@ -59,7 +59,7 @@ Este projeto cobre os seguintes casos de uso:
 
 ### Instalação de dependências 
 1.	Digite o comando a seguir no terminal aberto: **npm install**
-2.	Digite o comando a seguir no terminal para garantir a versão do Cypress necessário: **npx cypress install**
+2.	Digite o comando a seguir no terminal para garantir a versão do Cypress necessária: **npx cypress install**
 
 Execução do projeto através do Cypress no modo Interativo
 1.	Para rodar o projeto via tela interativa, digite o comando no terminal: **npm run test:interativo**
